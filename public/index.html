@@ -1,0 +1,1218 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>LifeCare Hospital</title>
+
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+
+        body {
+            margin: 0;
+
+            padding: 0;
+
+            font-family: Arial, sans-serif;
+
+            background-color: #f4f8fb;
+
+            text-align: center;
+
+            color: #333;
+        }
+
+
+        /* COMMON PAGE */
+
+        .page {
+            display: none;
+
+            min-height: 100vh;
+
+            padding: 30px 20px;
+        }
+
+
+        .page.active {
+            display: block;
+        }
+
+
+        /* COMMON HOSPITAL HEADER */
+
+        .hospital-header {
+            margin-bottom: 25px;
+        }
+
+
+        .hospital-logo {
+            width: 90px;
+
+            height: 90px;
+
+            margin: 0 auto 10px;
+
+            border: 2px solid #0b5ed7;
+
+            border-radius: 12px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            background-color: white;
+
+            font-size: 42px;
+        }
+        #homePage.active {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+#homePage .hospital-name {
+    font-size: 40px;
+}
+
+
+        .hospital-name {
+            margin: 5px 0;
+
+            color: #0b5ed7;
+
+            font-size: 40px;
+        }
+
+
+        .hospital-subtitle {
+            margin: 5px 0;
+
+            color: #333;
+
+            font-size: 20px;
+        }
+
+
+        /* COMMON CONTENT BOX */
+
+        .box {
+            width: 90%;
+
+            max-width: 600px;
+
+            margin: 25px auto;
+
+            padding: 30px;
+
+            background-color: white;
+
+            border-radius: 12px;
+
+            box-shadow:
+                0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+
+        /* HEADINGS */
+
+        h1 {
+            color: #0b5ed7;
+        }
+
+
+        h2 {
+            color: #333;
+        }
+
+
+        /* INPUTS */
+
+        input,
+        select {
+            width: 90%;
+
+            padding: 13px;
+
+            margin: 8px 0;
+
+            border: 1px solid #ccc;
+
+            border-radius: 6px;
+
+            font-size: 16px;
+
+            background-color: white;
+        }
+
+
+        /* BUTTONS */
+
+        button {
+            background-color: #0b5ed7;
+
+            color: white;
+
+            border: none;
+
+            padding: 12px 22px;
+
+            margin: 10px;
+
+            border-radius: 6px;
+
+            font-size: 16px;
+
+            cursor: pointer;
+        }
+
+
+        button:hover {
+            background-color: #084298;
+        }
+
+
+        /* DASHBOARD BUTTON */
+
+        .dashboard-button {
+            display: block;
+
+            width: 85%;
+
+            max-width: 420px;
+
+            margin: 15px auto;
+
+            padding: 16px;
+
+            font-size: 18px;
+        }
+
+
+        /* MESSAGE */
+
+        .message {
+            margin-top: 15px;
+
+            min-height: 24px;
+
+            font-weight: bold;
+        }
+
+
+        .success-message {
+            color: green;
+        }
+
+
+        .error-message {
+            color: red;
+        }
+
+
+        /* DOCTOR CARD */
+
+        .doctor-card {
+            width: 90%;
+
+            max-width: 650px;
+
+            margin: 20px auto;
+
+            padding: 25px;
+
+            background-color: white;
+
+            border-radius: 12px;
+
+            box-shadow:
+                0 2px 10px rgba(0, 0, 0, 0.1);
+
+            text-align: left;
+        }
+
+
+        .doctor-card h2 {
+            text-align: center;
+
+            color: #0b5ed7;
+
+            margin-top: 0;
+        }
+
+
+        .doctor-card p {
+            margin: 10px 0;
+
+            font-size: 16px;
+        }
+
+
+        /* TOKEN / QUEUE BOX */
+
+        .token-box {
+            width: 90%;
+
+            max-width: 650px;
+
+            margin: 30px auto;
+
+            padding: 30px;
+
+            background-color: white;
+
+            border-radius: 12px;
+
+            box-shadow:
+                0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+
+        .token-box p {
+            font-size: 18px;
+
+            margin: 16px;
+        }
+
+
+        /* CONFIRMATION BOX */
+
+        .confirmation-box {
+            margin-top: 25px;
+
+            padding: 20px;
+
+            background-color: #eef5ff;
+
+            border-radius: 10px;
+        }
+
+
+        .confirmation-box h2 {
+            color: #0b5ed7;
+        }
+
+
+        /* NEXT STEP / INSPECTION NOTE */
+
+        .next-step {
+            margin-top: 25px;
+
+            padding: 18px;
+
+            background-color: #eef5ff;
+
+            border-radius: 8px;
+        }
+
+    </style>
+
+</head>
+
+<body>
+    <div id="homePage" class="page active">
+
+    <div class="hospital-header">
+
+        <div class="hospital-logo">🏥</div>
+
+        <h1 class="hospital-name">
+            LifeCare Hospital
+        </h1>
+
+        <h2 class="hospital-subtitle">
+            Smart Healthcare
+        </h2>
+
+    </div>
+
+    <button onclick="showPage('registrationPage')">
+        Patient Registration
+    </button>
+
+</div>
+<div id="registrationPage" class="page">
+
+    <div class="hospital-header">
+
+        <div class="hospital-logo">🏥</div>
+
+        <h1 class="hospital-name">
+            LifeCare Hospital
+        </h1>
+
+    </div>
+
+    <div class="box">
+
+        <h2>Patient Registration</h2>
+
+        <input type="text" id="patientName"
+               placeholder="Name">
+
+        <input type="number" id="patientAge"
+               placeholder="Age">
+
+        <select id="patientGender">
+            <option value="">Select Gender</option>
+            <option>Male</option>
+            <option>Female</option>
+            <option>Other</option>
+        </select>
+
+        <input type="tel" id="patientPhone"
+               placeholder="Phone Number">
+
+        <input type="email" id="patientEmail"
+               placeholder="Email">
+
+        <br>
+
+        <button onclick="goToDashboard()">
+            Next →
+        </button>
+
+    </div>
+
+</div>
+<div id="dashboardPage" class="page">
+
+    <div class="hospital-header">
+
+        <div class="hospital-logo">🏥</div>
+
+        <h1 class="hospital-name">
+            LifeCare Hospital
+        </h1>
+
+    </div>
+
+    <div class="box">
+
+        <h2>
+            Hello: <span id="welcomePatientName">Patient</span>
+        </h2>
+
+        <button class="dashboard-button"
+                onclick="showPage('appointmentPage')">
+            Book Appointment
+        </button>
+
+        <button class="dashboard-button"
+                onclick="showPage('searchDoctorPage')">
+            Search Doctor
+        </button>
+
+        <button class="dashboard-button"
+                onclick="showPage('tokenPage')">
+            Token / Queue
+        </button>
+
+        <button class="dashboard-button"
+                onclick="updateQueueStatus();
+                showPage('queueStatusPage')">
+            Queue Status
+        </button>
+
+        <button onclick="showPage('homePage')">
+            ← Back
+        </button>
+
+    </div>
+
+</div>
+<div id="appointmentPage" class="page">
+
+    <div class="hospital-header">
+
+        <div class="hospital-logo">🏥</div>
+
+        <h1 class="hospital-name">
+            LifeCare Hospital
+        </h1>
+
+    </div>
+
+    <div class="box">
+
+        <h2>Book your Appointment here</h2>
+
+        <select id="specialization">
+            <option value="">
+                Select Specialization
+            </option>
+        </select>
+
+        <input type="date" id="appointmentDate">
+
+        <select id="appointmentDay">
+            <option value="">
+                Select Day
+            </option>
+        </select>
+
+        <br>
+
+        <button onclick="viewDoctors()">
+            View Doctor
+        </button>
+
+        <div id="doctorResults"></div>
+        <div id="confirmationArea"></div>
+
+        <br>
+
+        <button onclick="showPage('dashboardPage')">
+            ← Back
+        </button>
+
+    </div>
+
+</div>
+<div id="tokenPage" class="page">
+
+    <div class="hospital-header">
+
+        <div class="hospital-logo">🏥</div>
+
+        <h1 class="hospital-name">
+            LifeCare Hospital
+        </h1>
+
+    </div>
+
+    <div class="token-box">
+
+        <h2>Your Appointment Token</h2>
+
+        <h1>
+            Token No: <span id="tokenNumber">-</span>
+        </h1>
+
+        <p>
+            👤 Patient:
+            <span id="tokenPatientName">-</span>
+        </p>
+
+        <p>
+            👨‍⚕️ Doctor:
+            <span id="tokenDoctorName">-</span>
+        </p>
+
+        <p>
+            📅 Date:
+            <span id="tokenDate">-</span>
+        </p>
+
+        <p>
+            ⏰ Time:
+            <span id="tokenTime">-</span>
+        </p>
+
+        <button onclick="showPage('dashboardPage')">
+            ← Back
+        </button>
+
+    </div>
+
+</div>
+<div class="next-step">
+
+    <h3>🩺 General Medicine Inspection</h3>
+
+    <p>
+        Patients are advised to complete
+        General Medicine inspection before
+        consulting the specialist doctor.
+    </p>
+
+</div>
+<div id="queueStatusPage" class="page">
+
+    <div class="hospital-header">
+
+        <div class="hospital-logo">🏥</div>
+
+        <h1 class="hospital-name">
+            LifeCare Hospital
+        </h1>
+
+    </div>
+
+    <div class="box">
+
+        <h2>Queue Status</h2>
+
+        <p>
+            🎫 Your Token:
+            <span id="queueTokenNumber">-</span>
+        </p>
+
+        <p>
+            👨‍⚕️ Doctor:
+            <span id="queueDoctorName">-</span>
+        </p>
+
+        <p>
+            👥 Patients Ahead:
+            <span id="patientsAhead">-</span>
+        </p>
+
+        <p>
+            ⏳ Estimated Waiting Time:
+            <span id="waitingTime">-</span>
+        </p>
+
+        <div class="next-step">
+
+            <strong>📌 Please Note:</strong>
+
+            <p>
+                Please wait for your token number
+                to be called.
+            </p>
+
+        </div>
+
+        <button onclick="showPage('dashboardPage')">
+            ← Back
+        </button>
+
+    </div>
+
+</div>
+<div id="searchDoctorPage" class="page">
+
+    <div class="hospital-header">
+
+        <div class="hospital-logo">🏥</div>
+
+        <h1 class="hospital-name">
+            LifeCare Hospital
+        </h1>
+
+    </div>
+
+    <div class="box">
+
+        <h2>Search Doctor</h2>
+
+        <select id="searchSpecialization">
+
+            <option value="">
+                Select Specialization
+            </option>
+
+        </select>
+
+        <br>
+
+        <button onclick="searchDoctors()">
+            Search
+        </button>
+
+    </div>
+
+    <div id="searchDoctorResults"></div>
+
+    <button onclick="showPage('dashboardPage')">
+        ← Back
+    </button>
+
+</div>
+<script>
+    function showPage(pageId) {
+
+    const pages = document.querySelectorAll(".page");
+
+    pages.forEach(function(page) {
+
+        page.classList.remove("active");
+
+    });
+
+    document.getElementById(pageId)
+        .classList.add("active");
+}
+async function goToDashboard() {
+
+    const name =
+        document.getElementById("patientName").value;
+
+    const age =
+        document.getElementById("patientAge").value;
+
+    const gender =
+        document.getElementById("patientGender").value;
+
+    const phone =
+        document.getElementById("patientPhone").value;
+
+    const email =
+        document.getElementById("patientEmail").value;
+
+
+    if (!name || !age || !gender || !phone || !email) {
+
+        alert("Please fill all the details.");
+
+        return;
+    }
+
+
+    try {
+
+        const response = await fetch("/patients", {
+
+            method: "POST",
+
+            headers: {
+                "Content-Type": "application/json"
+            },
+
+            body: JSON.stringify({
+
+                name: name,
+
+                age: Number(age),
+
+                gender: gender,
+
+                phone: phone,
+
+                email: email
+
+            })
+
+        });
+
+
+        const data = await response.json();
+
+
+        if (response.ok) {
+
+            document.getElementById(
+                "welcomePatientName"
+            ).textContent = name;
+
+            alert(
+                "Patient registered successfully!"
+            );
+
+            showPage("dashboardPage");
+
+        } else {
+
+            alert(
+                data.message ||
+                "Patient registration failed"
+            );
+
+        }
+
+    } catch (error) {
+
+        console.log(error);
+
+        alert(
+            "Unable to connect to the server."
+        );
+
+    }
+
+}
+async function loadSpecializations() {
+
+    const specializations = [
+        "General Medicine",
+        "Cardiology",
+        "Pediatrics",
+        "Orthopedics",
+        "Dermatology",
+        "ENT",
+        "Gynecology"
+    ];
+
+    const appointmentSelect =
+        document.getElementById(
+            "specialization"
+        );
+
+    const searchSelect =
+        document.getElementById(
+            "searchSpecialization"
+        );
+
+    specializations.forEach(function(specialization) {
+
+        appointmentSelect.innerHTML +=
+            `<option value="${specialization}">
+                ${specialization}
+            </option>`;
+
+        searchSelect.innerHTML +=
+            `<option value="${specialization}">
+                ${specialization}
+            </option>`;
+
+    });
+
+}
+
+loadSpecializations();
+document.getElementById("appointmentDate")
+    .addEventListener("change", function() {
+
+        const date = new Date(this.value);
+
+        const days = [
+            "Sunday",
+            "Monday",
+            "Tuesday",
+            "Wednesday",
+            "Thursday",
+            "Friday",
+            "Saturday"
+        ];
+
+        const day =
+            days[date.getDay()];
+
+        const daySelect =
+            document.getElementById(
+                "appointmentDay"
+            );
+
+        daySelect.innerHTML =
+            `<option value="${day}">
+                ${day}
+            </option>`;
+
+    });
+    async function viewDoctors() {
+
+    const specialization =
+        document.getElementById(
+            "specialization"
+        ).value;
+
+    const date =
+        document.getElementById(
+            "appointmentDate"
+        ).value;
+
+
+    if (!specialization || !date) {
+
+        alert(
+            "Please select specialization and date."
+        );
+
+        return;
+    }
+
+
+    const response =
+        await fetch("/doctors");
+
+
+    const doctors =
+        await response.json();
+
+
+    const results =
+        document.getElementById(
+            "doctorResults"
+        );
+
+
+    results.innerHTML = "";
+
+
+    const selectedDoctors =
+        doctors.filter(function(doctor) {
+
+            return doctor.specialization ===
+                specialization;
+
+        });
+
+
+    if (selectedDoctors.length === 0) {
+
+        results.innerHTML =
+            "<p>No doctors found for this specialization.</p>";
+
+        return;
+    }
+
+
+    selectedDoctors.forEach(function(doctor) {
+
+        results.innerHTML += `
+
+            <div class="doctor-card">
+
+                <h2>
+                    👨‍⚕️ ${doctor.name}
+                </h2>
+
+                <p>
+                    <strong>Specialization:</strong>
+                    ${doctor.specialization}
+                </p>
+
+                <p>
+                    <strong>Department:</strong>
+                    ${doctor.department}
+                </p>
+
+                <p>
+                    <strong>Experience:</strong>
+                    ${doctor.experience}
+                </p>
+
+                <p>
+                    <strong>Available Days:</strong>
+                    ${doctor.availableDays.join(", ")}
+                </p>
+
+                <p>
+                    <strong>Available Time:</strong>
+                    ${doctor.availableTime}
+                </p>
+
+                <p>
+                    <strong>Patients Already Appointed:</strong>
+                    ${doctor.appointmentCount}
+                </p>
+
+                <button
+                    onclick='selectDoctor(${JSON.stringify(doctor)})'>
+                    Select Doctor
+                </button>
+
+            </div>
+
+        `;
+
+    });
+
+}
+let selectedDoctor = null;
+
+
+function selectDoctor(doctor) {
+
+    selectedDoctor = doctor;
+
+    alert(
+        doctor.name +
+        " selected successfully!"
+    );
+
+}
+async function confirmAppointment() {
+
+    if (!selectedDoctor) {
+
+        alert("Please select a doctor first.");
+
+        return;
+    }
+
+
+    const patientName =
+        document.getElementById(
+            "patientName"
+        ).value;
+
+    const appointmentDate =
+        document.getElementById(
+            "appointmentDate"
+        ).value;
+
+
+    const appointmentTime =
+        selectedDoctor.availableTime;
+
+
+    try {
+
+        const response = await fetch(
+            "/appointments",
+            {
+                method: "POST",
+
+                headers: {
+                    "Content-Type":
+                        "application/json"
+                },
+
+                body: JSON.stringify({
+
+                    patientName:
+                        patientName,
+
+                    doctorName:
+                        selectedDoctor.name,
+
+                    appointmentDate:
+                        appointmentDate,
+
+                    appointmentTime:
+                        appointmentTime
+
+                })
+            }
+        );
+
+
+        const data =
+            await response.json();
+
+
+        if (response.ok) {
+
+            document.getElementById(
+                "tokenNumber"
+            ).textContent =
+                data.appointment.tokenNumber;
+
+            document.getElementById(
+                "tokenPatientName"
+            ).textContent =
+                patientName;
+
+            document.getElementById(
+                "tokenDoctorName"
+            ).textContent =
+                selectedDoctor.name;
+
+            document.getElementById(
+                "tokenDate"
+            ).textContent =
+                appointmentDate;
+
+            document.getElementById(
+                "tokenTime"
+            ).textContent =
+                appointmentTime;
+
+
+            alert(
+                "Appointment booked successfully!"
+            );
+
+
+            showPage("tokenPage");
+
+        } else {
+
+            alert(
+                data.message ||
+                "Appointment booking failed"
+            );
+
+        }
+
+    } catch (error) {
+
+        console.log(error);
+
+        alert(
+            "Unable to connect to the server."
+        );
+
+    }
+
+}
+function selectDoctor(doctor) {
+
+    selectedDoctor = doctor;
+
+    const confirmationArea =
+        document.getElementById(
+            "confirmationArea"
+        );
+
+    confirmationArea.innerHTML = `
+
+        <div class="confirmation-box">
+
+            <h2>Doctor Selected</h2>
+
+            <p>
+                👨‍⚕️ Doctor:
+                ${doctor.name}
+            </p>
+
+            <p>
+                📅 Date:
+                ${document.getElementById(
+                    "appointmentDate"
+                ).value}
+            </p>
+
+            <p>
+                ⏰ Time:
+                ${doctor.availableTime}
+            </p>
+
+            <button onclick="confirmAppointment()">
+                Confirm Appointment
+            </button>
+
+        </div>
+
+    `;
+
+}
+async function searchDoctors() {
+
+    const specialization =
+        document.getElementById(
+            "searchSpecialization"
+        ).value;
+
+
+    if (!specialization) {
+
+        alert(
+            "Please select a specialization."
+        );
+
+        return;
+    }
+
+
+    const response =
+        await fetch("/doctors");
+
+
+    const doctors =
+        await response.json();
+
+
+    const results =
+        document.getElementById(
+            "searchDoctorResults"
+        );
+
+
+    results.innerHTML = "";
+
+
+    const filteredDoctors =
+        doctors.filter(function(doctor) {
+
+            return doctor.specialization ===
+                specialization;
+
+        });
+
+
+    filteredDoctors.forEach(function(doctor) {
+
+        results.innerHTML += `
+
+            <div class="doctor-card">
+
+                <h2>
+                    👨‍⚕️ ${doctor.name}
+                </h2>
+
+                <p>
+                    <strong>Specialization:</strong>
+                    ${doctor.specialization}
+                </p>
+
+                <p>
+                    <strong>Department:</strong>
+                    ${doctor.department}
+                </p>
+
+                <p>
+                    <strong>Experience:</strong>
+                    ${doctor.experience}
+                </p>
+
+                <p>
+                    <strong>Available Days:</strong>
+                    ${doctor.availableDays.join(", ")}
+                </p>
+
+                <p>
+                    <strong>Available Time:</strong>
+                    ${doctor.availableTime}
+                </p>
+
+            </div>
+
+        `;
+
+    });
+
+}
+function loadQueueDetails() {
+
+    if (!selectedDoctor) {
+        return;
+    }
+
+    document.getElementById(
+        "queueDoctorName"
+    ).textContent = selectedDoctor.name;
+
+}
+function updateQueueStatus() {
+
+    if (!selectedDoctor) {
+        return;
+    }
+
+    document.getElementById(
+        "queueDoctorName"
+    ).textContent =
+        selectedDoctor.name;
+
+    document.getElementById(
+        "queueTokenNumber"
+    ).textContent =
+        document.getElementById(
+            "tokenNumber"
+        ).textContent;
+
+    document.getElementById(
+        "patientsAhead"
+    ).textContent =
+        "Please check at the hospital";
+
+    document.getElementById(
+        "waitingTime"
+    ).textContent =
+        "Please check at the hospital";
+
+}
+
+
+
+</script>
+
+</body>
+
+</html>
