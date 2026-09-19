@@ -4,12 +4,15 @@ const patientSchema = new mongoose.Schema(
     {
         name: {
             type: String,
-            required: true
+            required: true,
+            trim: true
         },
 
         age: {
             type: Number,
-            required: true
+            required: true,
+            min: 1,
+            max: 120
         },
 
         gender: {
@@ -19,12 +22,15 @@ const patientSchema = new mongoose.Schema(
 
         phone: {
             type: String,
-            required: true
+            required: true,
+            trim: true
         },
 
         email: {
             type: String,
-            required: true
+            required: true,
+            trim: true,
+            lowercase: true
         },
 
         preferredLanguage: {

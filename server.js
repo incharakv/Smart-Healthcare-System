@@ -1,20 +1,39 @@
 const express = require("express");
 const mongoose = require("mongoose");
+const path = require("path");
 
-const Patient = require("./modelss/patient");
-const Doctor = require("./modelss/Doctor.js");
+const Patient = require("./modelss/Patient");
+const Doctor = require("./modelss/Doctor");
 const Appointment = require("./modelss/appointment");
 
 const app = express();
-
+const PORT = 5000;
 
 // ===============================
 // MIDDLEWARE
 // ===============================
 
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
-app.use(express.static("public"));
+// Serve public folder
+app.use(express.static(path.join(__dirname, "public")));
+
+
+// ===============================
+// MONGODB CONNECTION
+// ===============================
+
+const MONGO_URI = "mongodb://127.0.0.1:27017/smart_healthcare";
+
+mongoose
+    .connect(MONGO_URI)
+    .then(() => {
+        console.log("MongoDB connected successfully");
+    })
+    .catch((error) => {
+        console.error("MongoDB connection error:", error);
+    });
 
 
 // ===============================
@@ -22,341 +41,294 @@ app.use(express.static("public"));
 // ===============================
 
 app.get("/", (req, res) => {
-
-    res.sendFile(
-        __dirname + "/public/index.html"
-    );
-
+    res.sendFile(path.join(__dirname, "public", "index.html"));
 });
+
+
 // ===============================
-// REGISTER PATIENT
+// PATIENT REGISTRATION
 // ===============================
 
 app.post("/patients", async (req, res) => {
-
     try {
+        const {
+            name,
+            age,
+            gender,
+            phone,
+            email,
+            preferredLanguage
+        } = req.body;
 
-        const patient = new Patient(req.body);
+        // Basic validation
+        if (!name || !age || !gender || !phone || !email) {
+            return res.status(400).json({
+                success: false,
+                message: "Please fill all required fields."
+            });
+        }
 
-        await patient.save();
+        const patient = new Patient({
+            name: name,
+            age: age,
+            gender: gender,
+            phone: phone,
+            email: email,
+            preferredLanguage: preferredLanguage || "English"
+        });
+
+        const savedPatient = await patient.save();
 
         res.status(201).json({
-
-            message: "Patient registered successfully!",
-
-            patient: patient
-
+            success: true,
+            message: "Patient registered successfully.",
+            patient: savedPatient
         });
 
     } catch (error) {
+        console.error("Patient registration error:", error);
 
-        console.log(
-            "Patient Error:",
-            error
-        );
-
-        res.status(400).json({
-
-            message: "Patient registration failed",
-
+        res.status(500).json({
+            success: false,
+            message: "Patient registration failed.",
             error: error.message
-
         });
-
     }
-
 });
+
+
 // ===============================
 // GET ALL DOCTORS
 // ===============================
 
 app.get("/doctors", async (req, res) => {
-
     try {
-
         const doctors = await Doctor.find();
 
-        const doctorsWithAppointments =
-            await Promise.all(
-
-                doctors.map(async (doctor) => {
-
-                    const appointmentCount =
-                        await Appointment.countDocuments({
-                            doctorId: doctor._id
-                        });
-
-                    return {
-                        ...doctor.toObject(),
-                        appointmentCount:
-                            appointmentCount
-                    };
-
-                })
-
-            );
-
-        res.json(doctorsWithAppointments);
-
-    } catch (error) {
-
-        console.log(
-            "Doctor Error:",
-            error
-        );
-
-        res.status(500).json({
-
-            message: "Failed to fetch doctors",
-
-            error: error.message
-
+        res.json({
+            success: true,
+            doctors: doctors
         });
 
+    } catch (error) {
+        console.error("Doctor fetch error:", error);
+
+        res.status(500).json({
+            success: false,
+            message: "Unable to fetch doctors.",
+            error: error.message
+        });
     }
-
 });
+
+
 // ===============================
-// DOCTOR AVAILABILITY
+// GET DOCTORS BY SPECIALIZATION
 // ===============================
 
-app.get("/doctors/availability", async (req, res) => {
-
+app.get("/doctors/specialization/:specialization", async (req, res) => {
     try {
+        const specialization = req.params.specialization;
 
-        const {
-            specialization,
-            appointmentDate,
-            appointmentTime
-        } = req.query;
+        const doctors = await Doctor.find({
+            specialization: specialization
+        });
 
-        if (!specialization ||
-            !appointmentDate ||
-            !appointmentTime) {
+        res.json({
+            success: true,
+            doctors: doctors
+        });
 
-            return res.status(400).json({
-                message:
-                    "Please provide specialization, date and time."
+    } catch (error) {
+        console.error("Specialization search error:", error);
+
+        res.status(500).json({
+            success: false,
+            message: "Unable to search doctors.",
+            error: error.message
+        });
+    }
+});
+
+
+// ===============================
+// GET SINGLE DOCTOR
+// ===============================
+
+app.get("/doctors/:id", async (req, res) => {
+    try {
+        const doctor = await Doctor.findById(req.params.id);
+
+        if (!doctor) {
+            return res.status(404).json({
+                success: false,
+                message: "Doctor not found."
             });
         }
 
-        const selectedDate =
-            new Date(appointmentDate + "T00:00:00");
-
-        const dayNames = [
-            "Sunday",
-            "Monday",
-            "Tuesday",
-            "Wednesday",
-            "Thursday",
-            "Friday",
-            "Saturday"
-        ];
-
-        const selectedDay =
-            dayNames[selectedDate.getDay()];
-
-        const doctors =
-            await Doctor.find({
-                specialization: specialization
-            });
-
-        const availableDoctors =
-            doctors.filter(function (doctor) {
-
-                return doctor.availableDays &&
-                    doctor.availableDays.includes(
-                        selectedDay
-                    );
-
-            });
-
-        const doctorsWithAppointments =
-            await Promise.all(
-
-                availableDoctors.map(
-                    async function (doctor) {
-
-                        const appointmentCount =
-                            await Appointment.countDocuments({
-                                doctorId: doctor._id,
-                                appointmentDate:
-                                    appointmentDate
-                            });
-
-                        return {
-                            ...doctor.toObject(),
-
-                            appointmentCount:
-                                appointmentCount
-                        };
-
-                    }
-                )
-
-            );
-
-        res.json(doctorsWithAppointments);
-
-    } catch (error) {
-
-        console.log(
-            "Availability Error:",
-            error
-        );
-
-        res.status(500).json({
-
-            message:
-                "Failed to check doctor availability",
-
-            error:
-                error.message
-
+        res.json({
+            success: true,
+            doctor: doctor
         });
 
-    }
+    } catch (error) {
+        console.error("Single doctor fetch error:", error);
 
+        res.status(500).json({
+            success: false,
+            message: "Unable to fetch doctor.",
+            error: error.message
+        });
+    }
 });
+
+
 // ===============================
 // BOOK APPOINTMENT
 // ===============================
 
 app.post("/appointments", async (req, res) => {
-
     try {
-
         const {
             patientName,
-            doctorName,
+            doctorId,
             appointmentDate,
             appointmentTime
         } = req.body;
 
-
-        const doctor =
-            await Doctor.findOne({
-                name: doctorName
+        // Validate required fields
+        if (
+            !patientName ||
+            !doctorId ||
+            !appointmentDate ||
+            !appointmentTime
+        ) {
+            return res.status(400).json({
+                success: false,
+                message: "Please provide all appointment details."
             });
-
-
-        if (!doctor) {
-
-            return res.status(404).json({
-
-                message:
-                    "Doctor not found in MongoDB"
-
-            });
-
         }
 
+        // Find selected doctor
+        const doctor = await Doctor.findById(doctorId);
 
-        const appointmentCount =
-            await Appointment.countDocuments({
-
-                doctorId: doctor._id,
-
-                appointmentDate:
-                    appointmentDate
-
+        if (!doctor) {
+            return res.status(404).json({
+                success: false,
+                message: "Selected doctor not found."
             });
+        }
 
+        // Count existing appointments for this doctor and date
+        const existingAppointments = await Appointment.countDocuments({
+            doctorId: doctorId,
+            appointmentDate: appointmentDate
+        });
 
-        const tokenNumber =
-            appointmentCount + 1;
+        // Generate token
+        const tokenNumber = existingAppointments + 1;
 
+        // Create appointment
+        const appointment = new Appointment({
+            patientName: patientName,
+            doctorId: doctorId,
+            doctorName: doctor.name,
+            appointmentDate: appointmentDate,
+            appointmentTime: appointmentTime,
+            tokenNumber: tokenNumber
+        });
 
-        const appointment =
-            new Appointment({
-
-                patientName:
-                    patientName,
-
-                doctorId:
-                    doctor._id,
-
-                doctorName:
-                    doctor.name,
-
-                appointmentDate:
-                    appointmentDate,
-
-                appointmentTime:
-                    appointmentTime,
-
-                tokenNumber:
-                    tokenNumber
-
-            });
-
-
-        await appointment.save();
-
+        const savedAppointment = await appointment.save();
 
         res.status(201).json({
-
-            message:
-                "Appointment booked successfully!",
-
-            appointment:
-                appointment
-
+            success: true,
+            message: "Appointment booked successfully.",
+            appointment: savedAppointment
         });
-
 
     } catch (error) {
+        console.error("Appointment booking error:", error);
 
-        console.log(
-            "Appointment Error:",
-            error
-        );
+        res.status(500).json({
+            success: false,
+            message: "Appointment booking failed.",
+            error: error.message
+        });
+    }
+});
 
 
-        res.status(400).json({
+// ===============================
+// GET PATIENT APPOINTMENTS
+// ===============================
 
-            message:
-                "Appointment booking failed",
+app.get("/appointments/patient/:patientName", async (req, res) => {
+    try {
+        const patientName = req.params.patientName;
 
-            error:
-                error.message
+        const appointments = await Appointment.find({
+            patientName: patientName
+        }).populate("doctorId");
 
+        res.json({
+            success: true,
+            appointments: appointments
         });
 
+    } catch (error) {
+        console.error("Patient appointment error:", error);
+
+        res.status(500).json({
+            success: false,
+            message: "Unable to fetch appointments.",
+            error: error.message
+        });
     }
-
 });
+
+
 // ===============================
-// CONNECT MONGODB
-// ===============================
-
-mongoose
-    .connect("mongodb://127.0.0.1:27017/smart_healthcare")
-    .then(() => {
-
-        console.log(
-            "MongoDB connected successfully!"
-        );
-
-    })
-    .catch((error) => {
-
-        console.log(
-            "MongoDB connection error:",
-            error
-        );
-
-    });
-    // ===============================
-// START SERVER
+// GET QUEUE STATUS
 // ===============================
 
-const PORT = 5000;
+app.get(
+    "/queue/:doctorId/:appointmentDate",
+    async (req, res) => {
+        try {
+            const doctorId = req.params.doctorId;
+            const appointmentDate = req.params.appointmentDate;
+
+            const appointments = await Appointment.find({
+                doctorId: doctorId,
+                appointmentDate: appointmentDate
+            }).sort({ tokenNumber: 1 });
+
+            res.json({
+                success: true,
+                totalPatients: appointments.length,
+                appointments: appointments
+            });
+
+        } catch (error) {
+            console.error("Queue status error:", error);
+
+            res.status(500).json({
+                success: false,
+                message: "Unable to fetch queue status.",
+                error: error.message
+            });
+        }
+    }
+);
+
+
+// ===============================
+// SERVER START
+// ===============================
 
 app.listen(PORT, () => {
-
-    console.log(
-        `Server is running on http://localhost:${PORT}`
-    );
-
+    console.log("------------------------------------");
+    console.log("LifeCare Hospital Server Started");
+    console.log(`Open: http://localhost:${PORT}`);
+    console.log("------------------------------------");
 });
